@@ -1,27 +1,8 @@
- language: ruby
-rvm:
-  - 2.0.0
-
-before_install:
-  - git submodule update --init --recursive
-  - sudo apt-get install nmap
-  - sudo apt-get install wget
-  - sudo apt-get install libcurl4-openssl-dev
-  - 'cd vendor/Garmr && sudo python setup.py install && cd ../..'
-  - 'cd vendor && wget https://github.com/nabla-c0d3/sslyze/releases/download/release-0.10/sslyze-0_10-linux64.zip && unzip sslyze-0_10-linux64.zip && cd ..'
-  - 'cd vendor && wget http://downloads.sourceforge.net/project/dirb/dirb/2.03/dirb203.tar.gz && tar xvfz dirb203.tar.gz && cd dirb && ./configure && make && sudo cp dirb /usr/local/bin/ && cd ../../'
-  - export SSLYZE_PATH="$TRAVIS_BUILD_DIR/vendor/sslyze/sslyze.py"
-  - export SQLMAP_PATH="$TRAVIS_BUILD_DIR/vendor/sqlmap/sqlmap.py"
-  - export DIRB_WORDLISTS="$TRAVIS_BUILD_DIR/vendor/dirb/wordlists"
-
-before_script:
-  - ./set_token.sh
-  - bundle exec rake db:migrate
-  - bundle exec rails s -d
-
-script: 
-  - bundle exec rake secure_pipeline:network_attack
-  - bundle exec rake secure_pipeline:ssl_attack
-  - bundle exec rake secure_pipeline:xss
-  - bundle exec rake secure_pipeline:information_leakage
-- bundle exec rake secure_pipeline:sql_injection
+language: ruby
+deploy:
+  provider: releases
+  api_key:
+    secure: CmqgEEOapS23R8W9KtxMjxraiQAHsK4rplFRGAYh/2BRs5OY5rLsyAakKrl30N2Cgh2TntX/ww7QXYmKzRNgA2MmizEoIkFp8WrWPoBfstZ9jtR0Aer+VPsIhNE99MGyjQt6mbvIPNu98vk8oZP8Zu7YfQGbyEGhsOzEsnboYE192oxCqFajUNm883Vq9FIoFxgVv2M5/CLM9u1E8L06UF8MwhL359oHfBdw6LH325Kw+XqCw4oE/1z6N4NvfJxg1S9nKpN88rBKHNfAu7Z7JR2pd/j6LB0oBWI2uQEI6zb5iyJQ/8DugZe8/XnLo/FttsqQZRGf81/RB10Q57sMdtzsAQdcveuszUo7fhb/Z8mtEUJJjWpc7HIue3MsAUJvbTnYOIkI4KaUgq5Z7wn50PowACvlrH2GlfEjPrkUIgzCu/z6/NlkwpBa+VJs47wq+syLp2OWEylSd+ON/BmjSUhbrB1hZTuFsW/hvLo8vF1b+zkSaFt4ICAc6pR9SPYHPGyR6b3++fY+3uC0dVX80GfQrko2y/P/EGf599gm4878LW53KRGVr+Bh19zYi9/z9mHc8Ph1Ea3PsoFAiyXgCF/mFTmQwcjw9udFA2Iv1/AxPjqP2cVbSb2TRf0J6LwzZvzwBOxWLRLRqAOMMwMJrK7nZAucBY6plqWdZy/taTI=
+  file: ''
+  on:
+    repo: caperneoignis/ruby_test_site
